@@ -1,0 +1,95 @@
+<script>
+    //  INSERT DATA
+
+    $("#btnsave").click(function () {
+        // console.log("save Clicked");
+        output =""
+    
+    // this ("#nameid") is what we pass in forms.py and inspect html you will get it 
+    let nm = $("#nameid").val();// here is to get the value 
+    let em = $("#emailid").val();
+    // console.log(em) get email from the user 
+    let pw = $("#passwordid").val();
+    let csr = $("input[name=csrfmiddlewaretoken]").val();
+
+    if (nm == ""){
+        console.log("Please Enter Your Name")
+    }
+    else if (em == ""){
+        console.log("Please Enter Your Email")
+    }
+    else if (pw==""){
+        console.log("Please Enter Your Password")
+    }
+    else {
+        // console.log(nm)
+        // console.log(em)
+        // console.log(pw) 
+        // here we assign data we get from frontend to the variable mydata
+        mydata = {name:nm, email:em, password:pw, csrfmiddlewaretoken: csr};
+        //console.log(mydata)
+        $.ajax({
+            url: "{% url  'save' %}", //url going to django save url 
+            method: "POST",
+            data: mydata, // pass the data (mydata) to data
+
+            success:function(data){
+                //console.log(data)
+                // console.log(data.status);
+                x = data.student_data // student_data is coming from views.py
+                console.log(x)
+                if (data.status == "Save"){
+                    console.log("Form Submitted Successfully")
+                    // console.log(data.student_data)
+                    //console.log(x)
+                    for (i=0; i < x.length; i++){
+                        output += 
+                        "<tr><td>" +
+                        x[i].id + 
+                        "</td><td>" +
+                        x[i].name +
+                        "</td><td>"+
+                        x[i].email + 
+                        "</td><td>" + 
+                        x[i].password + 
+                        "</td><td> <input type='button' class='btn btn-warning btn-sm btn-edit' value='Edit' data-sid="+ x[i].id+ "/>" +  "</td><td> <input type='button' class='btn btn-danger btn-sm btn-del' value='Delete' data-sid="+ x[i].id+ "/> ";
+                    }
+                    $("#tbody").html(output);
+                    $("form")[0].reset();
+                }
+
+                if (data.status == 0){
+                    console.log("Unable to Save Form")
+                }
+            }
+        })
+
+    }
+    
+
+    });
+
+
+
+
+// DELETE DATA
+$("tbody").on("click", ".btn-del", function(){
+    console.log("Delete Button Clicked");
+    let id = $(this).attr("data-sid");
+    console.log(id);
+    mydata = {sid:id}
+
+    $.ajax({
+        url: "{% url 'delete' %}",// going to django delete url 
+        method: "POST",
+        data: mydata,
+
+        success:function(data){
+            console.log(data)
+        }
+    })
+
+})
+
+
+</script>

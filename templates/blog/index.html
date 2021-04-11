@@ -1,0 +1,66 @@
+{% extends  'base.html'  %}
+{% load static %}
+
+
+
+
+
+
+{% block content %}
+<div class="container  mt-5">
+    <h2 class="text-center alert alert-danger">Django Function Based View Ajax CRUD </h2>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <h4 class= "text-center alert alert-info">Add/ Update Student</h4>
+        
+            <form action="" class="mt-5" method="POST" >
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="button" value="Submit" class="btn btn-success  form-control" id="btnsave">
+            </form>
+        </div>
+
+        <div class="col-sm-8">
+            <h4 class= "text-center alert alert-info">Show Student Informations</h4>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Password</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    {% for name in student %}
+                    <tr>
+                        <td>{{ name.id }}</td>
+                        <td>{{ name.name }}</td>
+                        <td>{{ name.email }}</td>
+                        <td>{{ name.password }}</td>
+                        <td class="">
+                            <!-- Update -->
+                            <input type="button" data-sid="{{name.id}}"
+                            class="btn btn-warning btn-sm btn-edit" value="Edit">
+                        </td>
+                        <td>
+                            <!-- Delete -->
+                            <input type="button" data-sid="{{name.id}}"
+                            class="btn btn-danger btn-sm btn-del" value="Delete">
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+    
+</div>
+
+
+{% endblock content %}
